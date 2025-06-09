@@ -1,6 +1,7 @@
 package org.BodeNetwork.com.controllers;
 
 import org.BodeNetwork.com.data.repositories.ContactRepository;
+import org.BodeNetwork.com.services.ContactManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -13,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/BodeNetwork-contact")
 public class ContactControllers {
     @Autowired
-    ContactRepository contactRepository;
+    ContactManagementService contactManagementService;
 
     @GetMapping("/test")
     public String test() {
