@@ -16,9 +16,6 @@ public class UserRepositoryTest {
 
     @BeforeEach
     void setUp() {
-        User user = new User();
-        user.setPhoneNumber("07046182869");
-        user.setPassword("123456");
 
         userRepository.deleteAll();
     }
