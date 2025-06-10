@@ -1,10 +1,12 @@
 package org.BodeNetwork.com.services;
 
+import org.BodeNetwork.com.data.models.Contact;
 import org.BodeNetwork.com.data.models.User;
 import org.BodeNetwork.com.data.repositories.ContactRepository;
 import org.BodeNetwork.com.data.repositories.UserRepository;
 import org.BodeNetwork.com.dtos.request.*;
 import org.BodeNetwork.com.dtos.response.*;
+import org.BodeNetwork.com.exceptions.ContactDoesNotExistException;
 import org.BodeNetwork.com.exceptions.PasswordException;
 import org.BodeNetwork.com.exceptions.UserDoesNotExistException;
 import org.BodeNetwork.com.exceptions.UserExistException;
@@ -29,7 +31,7 @@ public class ContactManagementServiceImpl implements ContactManagementService {
             user.setEmail(request.getEmail());
             user.setPassword(request.getPassword());
             userRepository.save(user);
-            return Mapper.mapToRegistrationRequest(user);
+            return Mapper.mapToRegistrationResponse(user);
         }
     }
 
@@ -39,7 +41,7 @@ public class ContactManagementServiceImpl implements ContactManagementService {
                 .orElseThrow(() ->  new UserDoesNotExistException("User not found"));
         if(!user.isValidPassword(userLoginRequest.getPassword())) throw new PasswordException("Invalid password");
         else{
-            UserLoginResponse response= Mapper.mapToLoginRequest(user);
+            UserLoginResponse response= Mapper.mapToLoginResponse(user);
             response.setContacts(contactRepository.findByUserId(user.getId()));
             return response;
         }
@@ -48,12 +50,24 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Override
     public AddContactResponse addContact(AddContactRequest addContactRequest) {
-        return null;
+        User user = userRepository.findById(addContactRequest.getUserId())
+                .orElseThrow(() -> new UserDoesNotExistException("User not found"));
+        Contact contact = new Contact();
+        contact.setUserId(user.getId());
+        contact.setPhoneNumber(addContactRequest.getPhoneNumber());
+        contact.setEmail(addContactRequest.getEmail());
+        contact.setFirstname(addContactRequest.getFirstname());
+        contact.setLastname(addContactRequest.getLastname());
+        contactRepository.save(contact);
+        return Mapper.mapToAddContactResponse(contact);
     }
 
     @Override
-    public DeleteContactResponse deleteContact(DeleteContactRequest deleteContactRequest) {
-        return null;
+    public DeleteContactResponse deleteContact(DeleteContactRequest request) {
+        Contact contact = contactRepository.findById(request.getContactId())
+                .orElseThrow(() -> new ContactDoesNotExistException("Contact does not exist"));
+        contactRepository.delete(contact);
+        return Mapper.mapToDeleteContactResponse(contact);
     }
 
     @Override

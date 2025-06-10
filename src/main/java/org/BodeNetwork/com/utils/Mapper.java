@@ -1,24 +1,45 @@
 package org.BodeNetwork.com.utils;
 
+import org.BodeNetwork.com.data.models.Contact;
 import org.BodeNetwork.com.data.models.User;
-import org.BodeNetwork.com.data.repositories.UserRepository;
-import org.BodeNetwork.com.dtos.request.UserLoginRequest;
-import org.BodeNetwork.com.dtos.request.UserRegistrationRequest;
+import org.BodeNetwork.com.dtos.response.AddContactResponse;
+import org.BodeNetwork.com.dtos.response.DeleteContactResponse;
 import org.BodeNetwork.com.dtos.response.UserLoginResponse;
 import org.BodeNetwork.com.dtos.response.UserRegistrationResponse;
 
 public class Mapper {
-    public static UserRegistrationResponse mapToRegistrationRequest( User user) {
+    public static UserRegistrationResponse mapToRegistrationResponse(User user) {
         UserRegistrationResponse response = new UserRegistrationResponse();
         response.setPhoneNumber(user.getPhoneNumber());
         response.setEmail(user.getEmail());
         response.setId(user.getId());
         return response;
     }
-    public static UserLoginResponse mapToLoginRequest(User user) {
+    public static UserLoginResponse mapToLoginResponse(User user) {
         UserLoginResponse response = new UserLoginResponse();
         response.setPhoneNumber(user.getPhoneNumber());
         response.setId(user.getId());
        return response;
+    }
+
+    public static AddContactResponse mapToAddContactResponse(Contact contact) {
+        AddContactResponse response = new AddContactResponse();
+        response.setEmail(contact.getEmail());
+        response.setPhoneNumber(contact.getPhoneNumber());
+        response.setId(contact.getId());
+        response.setFirstname(contact.getFirstname());
+        response.setLastname(contact.getLastname());
+        response.setUserId(contact.getUserId());
+        return response;
+    }
+    public static DeleteContactResponse mapToDeleteContactResponse(Contact contact) {
+        DeleteContactResponse response = new DeleteContactResponse();
+        response.setEmail(contact.getEmail());
+        response.setPhoneNumber(contact.getPhoneNumber());
+        response.setId(contact.getId());
+        response.setFirstname(contact.getFirstname());
+        response.setLastname(contact.getLastname());
+        response.setUserId(contact.getUserId());
+        return response;
     }
 }

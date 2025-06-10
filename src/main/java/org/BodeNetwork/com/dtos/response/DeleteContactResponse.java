@@ -4,5 +4,10 @@ import lombok.Data;
 
 @Data
 public class DeleteContactResponse {
-    private String message;
+    private String id;
+    private String firstname;
+    private String lastname;
+    private String email;
+    private String phoneNumber;
+    private String userId;
 }
