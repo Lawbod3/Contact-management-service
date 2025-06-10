@@ -2,10 +2,7 @@ package org.BodeNetwork.com.utils;
 
 import org.BodeNetwork.com.data.models.Contact;
 import org.BodeNetwork.com.data.models.User;
-import org.BodeNetwork.com.dtos.response.AddContactResponse;
-import org.BodeNetwork.com.dtos.response.DeleteContactResponse;
-import org.BodeNetwork.com.dtos.response.UserLoginResponse;
-import org.BodeNetwork.com.dtos.response.UserRegistrationResponse;
+import org.BodeNetwork.com.dtos.response.*;
 
 public class Mapper {
     public static UserRegistrationResponse mapToRegistrationResponse(User user) {
@@ -40,6 +37,15 @@ public class Mapper {
         response.setFirstname(contact.getFirstname());
         response.setLastname(contact.getLastname());
         response.setUserId(contact.getUserId());
+        return response;
+    }
+
+    public static UpdateContactResponse mapToUpdateContactResponse(Contact contact) {
+        UpdateContactResponse response = new UpdateContactResponse();
+        response.setEmail(contact.getEmail());
+        response.setPhoneNumber(contact.getPhoneNumber());
+        response.setFirstname(contact.getFirstname());
+        response.setLastname(contact.getLastname());
         return response;
     }
 }

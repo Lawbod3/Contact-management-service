@@ -10,4 +10,6 @@ public class UpdateContactRequest {
     private String email;
     @NotBlank(message = "PhoneNumber can not be empty")
     private String phoneNumber;
+    @NotBlank
+    private String contactId;
 }

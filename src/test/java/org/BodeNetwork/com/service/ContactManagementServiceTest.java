@@ -2,15 +2,11 @@ package org.BodeNetwork.com.service;
 
 import org.BodeNetwork.com.data.repositories.ContactRepository;
 import org.BodeNetwork.com.data.repositories.UserRepository;
-import org.BodeNetwork.com.dtos.request.AddContactRequest;
-import org.BodeNetwork.com.dtos.request.DeleteContactRequest;
-import org.BodeNetwork.com.dtos.request.UserLoginRequest;
-import org.BodeNetwork.com.dtos.request.UserRegistrationRequest;
-import org.BodeNetwork.com.dtos.response.AddContactResponse;
-import org.BodeNetwork.com.dtos.response.DeleteContactResponse;
-import org.BodeNetwork.com.dtos.response.UserLoginResponse;
-import org.BodeNetwork.com.dtos.response.UserRegistrationResponse;
+import org.BodeNetwork.com.dtos.request.*;
+import org.BodeNetwork.com.dtos.response.*;
+import org.BodeNetwork.com.exceptions.ContactDoesNotExistException;
 import org.BodeNetwork.com.exceptions.PasswordException;
+import org.BodeNetwork.com.exceptions.UserDoesNotExistException;
 import org.BodeNetwork.com.exceptions.UserExistException;
 import org.BodeNetwork.com.services.ContactManagementService;
 import org.junit.jupiter.api.BeforeEach;
@@ -35,6 +31,8 @@ public class ContactManagementServiceTest {
     private AddContactResponse addContactResponse;
     private DeleteContactRequest deleteContactRequest;
     private DeleteContactResponse deleteContactResponse;
+    private UpdateContactRequest updateContactRequest;
+    private UpdateContactResponse updateContactResponse;
 
 
 
@@ -57,6 +55,10 @@ public class ContactManagementServiceTest {
         addContactRequest.setFirstname("TestFirstname");
 
         deleteContactRequest = new DeleteContactRequest();
+
+        updateContactRequest = new UpdateContactRequest();
+        updateContactRequest.setEmail("test@test.com");
+        updateContactRequest.setPhoneNumber("1111111111");
 
     }
     @Test
@@ -99,6 +101,17 @@ public class ContactManagementServiceTest {
     }
 
     @Test
+    public void testThatContactServiceManagementCanThrowExceptionForUserNotFound() {
+        userRegistrationResponse = contactManagementService.registerUser(userRegistrationRequest);
+        assertEquals(userRegistrationRequest.getEmail(), userRegistrationResponse.getEmail());
+        userLoginResponse = contactManagementService.loginUser(userLoginRequest);
+        assertEquals(userRegistrationResponse.getId(), userLoginResponse.getId());
+        addContactRequest.setUserId("1111");
+        assertThrows(UserDoesNotExistException.class, () -> contactManagementService.addContact(addContactRequest));
+
+    }
+
+    @Test
     public void testThatContactServiceManagementCanDeleteExistingContact() {
         userRegistrationResponse =  contactManagementService.registerUser(userRegistrationRequest);
         assertEquals(userRegistrationRequest.getEmail(), userRegistrationResponse.getEmail());
@@ -111,8 +124,54 @@ public class ContactManagementServiceTest {
         deleteContactResponse = contactManagementService.deleteContact(deleteContactRequest);
         assertFalse(contactRepository.existsById(deleteContactResponse.getId()));
 
+    }
+
+    @Test
+    public void testThatContactServiceManagementCanThrowExzceptionForDeleteExistingContact() {
+        userRegistrationResponse =  contactManagementService.registerUser(userRegistrationRequest);
+        assertEquals(userRegistrationRequest.getEmail(), userRegistrationResponse.getEmail());
+        userLoginResponse = contactManagementService.loginUser(userLoginRequest);
+        assertEquals(userRegistrationResponse.getId(), userLoginResponse.getId());
+        addContactRequest.setUserId(userRegistrationResponse.getId());
+        addContactResponse = contactManagementService.addContact(addContactRequest);
+        assertEquals(addContactResponse.getUserId(), userLoginResponse.getId());
+        deleteContactRequest.setContactId("2345");
+        assertThrows(ContactDoesNotExistException.class, () -> contactManagementService.deleteContact(deleteContactRequest));
 
     }
+
+    @Test
+    public void testThatContactServiceCanThrowExceptionForUpdateContact() {
+        userRegistrationResponse =  contactManagementService.registerUser(userRegistrationRequest);
+        assertEquals(userRegistrationRequest.getEmail(), userRegistrationResponse.getEmail());
+        userLoginResponse = contactManagementService.loginUser(userLoginRequest);
+        assertEquals(userRegistrationResponse.getId(), userLoginResponse.getId());
+        addContactRequest.setUserId(userRegistrationResponse.getId());
+        addContactResponse = contactManagementService.addContact(addContactRequest);
+        assertEquals(addContactResponse.getUserId(), userLoginResponse.getId());
+        updateContactRequest.setContactId("45677");
+        assertThrows(ContactDoesNotExistException.class, () -> contactManagementService.updateContact(updateContactRequest));
+
+    }
+
+    @Test
+    public void testThatContactServiceCanUpdateContact() {
+        userRegistrationResponse =  contactManagementService.registerUser(userRegistrationRequest);
+        assertEquals(userRegistrationRequest.getEmail(), userRegistrationResponse.getEmail());
+        userLoginResponse = contactManagementService.loginUser(userLoginRequest);
+        assertEquals(userRegistrationResponse.getId(), userLoginResponse.getId());
+        addContactRequest.setUserId(userRegistrationResponse.getId());
+        addContactResponse = contactManagementService.addContact(addContactRequest);
+        assertEquals(addContactResponse.getUserId(), userLoginResponse.getId());
+        updateContactRequest.setContactId(addContactResponse.getId());
+        updateContactResponse = contactManagementService.updateContact(updateContactRequest);
+        assertNotEquals(updateContactResponse.getPhoneNumber(), addContactResponse.getPhoneNumber());
+
+    }
+
+
+
+
 
 
 

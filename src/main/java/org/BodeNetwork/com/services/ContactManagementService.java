@@ -9,6 +9,5 @@ public interface ContactManagementService {
     UserLoginResponse loginUser(UserLoginRequest userLoginRequest);
     AddContactResponse addContact(AddContactRequest addContactRequest);
     DeleteContactResponse deleteContact(DeleteContactRequest deleteContactRequest);
-    FindContactResponse findContact(FindContactRequest findContactRequest);
-    UpdateContactResponse updateContact(UserRegistrationRequest userRegistrationRequest);
+    UpdateContactResponse updateContact(UpdateContactRequest updateContactRequest);
 }
