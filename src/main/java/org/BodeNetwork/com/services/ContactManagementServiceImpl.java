@@ -5,6 +5,8 @@ import org.BodeNetwork.com.data.repositories.ContactRepository;
 import org.BodeNetwork.com.data.repositories.UserRepository;
 import org.BodeNetwork.com.dtos.request.*;
 import org.BodeNetwork.com.dtos.response.*;
+import org.BodeNetwork.com.exceptions.PasswordException;
+import org.BodeNetwork.com.exceptions.UserDoesNotExistException;
 import org.BodeNetwork.com.exceptions.UserExistException;
 import org.BodeNetwork.com.utils.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,15 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Override
     public UserLoginResponse loginUser(UserLoginRequest userLoginRequest) {
-        return null;
+        User user = userRepository.findByPhoneNumber(userLoginRequest.getPhoneNumber())
+                .orElseThrow(() ->  new UserDoesNotExistException("User not found"));
+        if(!user.isValidPassword(userLoginRequest.getPassword())) throw new PasswordException("Invalid password");
+        else{
+            UserLoginResponse response= Mapper.mapToLoginRequest(user);
+            response.setContacts(contactRepository.findByUserId(user.getId()));
+            return response;
+        }
+
     }
 
     @Override

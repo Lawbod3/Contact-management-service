@@ -2,9 +2,13 @@ package org.BodeNetwork.com.controllers;
 
 import jakarta.validation.Valid;
 import org.BodeNetwork.com.data.repositories.UserRepository;
+import org.BodeNetwork.com.dtos.request.UserLoginRequest;
 import org.BodeNetwork.com.dtos.request.UserRegistrationRequest;
 import org.BodeNetwork.com.dtos.response.ApiResponse;
+import org.BodeNetwork.com.dtos.response.UserLoginResponse;
 import org.BodeNetwork.com.dtos.response.UserRegistrationResponse;
+import org.BodeNetwork.com.exceptions.PasswordException;
+import org.BodeNetwork.com.exceptions.UserDoesNotExistException;
 import org.BodeNetwork.com.exceptions.UserExistException;
 import org.BodeNetwork.com.services.ContactManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,10 +34,20 @@ public class UserControllers {
         try {
             UserRegistrationResponse response = contactManagementService.registerUser(request);
             return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.CREATED);
-
         }
         catch (UserExistException e) {
             return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<?> login(@Valid @RequestBody UserLoginRequest request) {
+        try {
+            UserLoginResponse response = contactManagementService.loginUser(request);
+            return new ResponseEntity<>(new ApiResponse(true, response), HttpStatus.OK);
+        }
+        catch (UserDoesNotExistException | PasswordException e) {
+            return new ResponseEntity<>(new ApiResponse(false, e.getMessage()), HttpStatus.NOT_FOUND);
         }
     }
 
