@@ -11,11 +11,15 @@ import org.BodeNetwork.com.exceptions.PasswordException;
 import org.BodeNetwork.com.exceptions.UserDoesNotExistException;
 import org.BodeNetwork.com.exceptions.UserExistException;
 import org.BodeNetwork.com.utils.Mapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 
 @Service
 public class ContactManagementServiceImpl implements ContactManagementService {
+
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -64,10 +68,15 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Override
     public DeleteContactResponse deleteContact(DeleteContactRequest request) {
-        Contact contact = contactRepository.findById(request.getContactId())
-                .orElseThrow(() -> new ContactDoesNotExistException("Contact does not exist"));
-        contactRepository.delete(contact);
-        return Mapper.mapToDeleteContactResponse(contact);
+        try {
+            Contact contact = contactRepository.findById(request.getContactId())
+                    .orElseThrow(() -> new ContactDoesNotExistException("Contact does not exist"));
+            contactRepository.delete(contact);
+            return Mapper.mapToDeleteContactResponse(contact);
+        }
+        catch (DataAccessException e) {
+            throw new RuntimeException("Failed to delete contact due to database error", e);
+        }
     }
 
     @Override
