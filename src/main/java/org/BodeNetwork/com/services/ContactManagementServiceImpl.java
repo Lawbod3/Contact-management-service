@@ -81,12 +81,13 @@ public class ContactManagementServiceImpl implements ContactManagementService {
 
     @Override
     public UpdateContactResponse updateContact(UpdateContactRequest request) {
+        Mapper.mapValidationToUpdateContactRequest(request);
         Contact contact = contactRepository.findById(request.getContactId())
                 .orElseThrow(() -> new ContactDoesNotExistException("Contact does not exist"));
-        contact.setFirstname(request.getFirstname());
-        contact.setLastname(request.getLastname());
-        contact.setEmail(request.getEmail());
-        contact.setPhoneNumber(request.getPhoneNumber());
+        if(request.getFirstname() != null) contact.setFirstname(request.getFirstname());
+        if(request.getLastname() != null) contact.setLastname(request.getLastname());
+        if(request.getPhoneNumber() != null) contact.setPhoneNumber(request.getPhoneNumber());
+        if(request.getEmail() != null) contact.setEmail(request.getEmail());
         contactRepository.save(contact);
         return Mapper.mapToUpdateContactResponse(contact);
     }

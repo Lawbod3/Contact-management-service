@@ -1,8 +1,11 @@
 package org.BodeNetwork.com.utils;
 
+import jakarta.validation.ValidationException;
 import org.BodeNetwork.com.data.models.Contact;
 import org.BodeNetwork.com.data.models.User;
+import org.BodeNetwork.com.dtos.request.UpdateContactRequest;
 import org.BodeNetwork.com.dtos.response.*;
+import org.BodeNetwork.com.exceptions.ContactValidationException;
 
 public class Mapper {
     public static UserRegistrationResponse mapToRegistrationResponse(User user) {
@@ -38,6 +41,14 @@ public class Mapper {
         response.setLastname(contact.getLastname());
         response.setUserId(contact.getUserId());
         return response;
+    }
+
+    public static void mapValidationToUpdateContactRequest(UpdateContactRequest request) {
+        if(request.getFirstname() == null &&
+                request.getLastname() == null &&
+                request.getEmail() == null &&
+                request.getPhoneNumber() == null
+        ) throw new ContactValidationException("At least Firstname or lastname or Email or PhoneNumber is required");
     }
 
     public static UpdateContactResponse mapToUpdateContactResponse(Contact contact) {
