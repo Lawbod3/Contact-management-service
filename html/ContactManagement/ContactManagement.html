@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BodeNetwork</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>📱 BodeNetwork</h1>
+      <nav>
+        <ul>
+          <li><a href="#" onclick="showSection('home')">Home</a></li>
+          <li><a href="#" onclick="showSection('register')">Register</a></li>
+          <li><a href="#" onclick="showSection('login')">Login</a></li>
+        </ul>
+      </nav>
+    </header>
+
+    <main>
+      <!-- Home Section -->
+      <section id="home">
+        <h2>Welcome to BodeNetwork</h2>
+        <p>Please register or login to manage your contacts efficiently.</p>
+      </section>
+
+      <!-- Register Section -->
+      <section id="register" style="display: none">
+        <h2>Register</h2>
+        <form id="registerForm">
+          <label for="regPhonenumber">Phonenumber:</label>
+          <input type="text" id="regPhonenumber" name="PhoneNumber" required />
+
+          <label for="regEmail">Email:</label>
+          <input type="email" id="regEmail" name="email" required />
+
+          <label for="regPassword">Password:</label>
+          <input type="password" id="regPassword" name="password" required />
+
+          <button type="submit">Register</button>
+        </form>
+        <div id="regMessage" class="message"></div>
+      </section>
+
+      <!-- Login Section -->
+      <section id="login" style="display: none">
+        <h2>Login</h2>
+        <form id="loginForm">
+          <label for="loginPhonenumber">Phonenumber:</label>
+          <input
+            type="PhoneNumber"
+            id="loginPhonenumber"
+            name="PhoneNumber"
+            required
+          />
+
+          <label for="loginPassword">Password:</label>
+          <input type="password" id="loginPassword" name="password" required />
+
+          <button type="submit">Login</button>
+        </form>
+        <div id="loginMessage" class="message"></div>
+      </section>
+    </main>
+
+    <footer>
+      <p>&copy; 2025 BodeNetwork. All rights reserved.</p>
+    </footer>
+
+    <script src="Script.js"></script>
+  </body>
+</html>
