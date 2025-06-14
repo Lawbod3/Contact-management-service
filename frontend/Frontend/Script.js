@@ -30,6 +30,10 @@ function showSection(sectionId) {
     const registerMessage = document.getElementById("regMessage");
     if (registerMessage) registerMessage.textContent = "";
   }
+  if (sectionId !== "confirmDeletePage") {
+    const registerMessage = document.getElementById("regMessage");
+    if (deleteContactMessage) deleteContactMessage.textContent = "";
+  }
 }
 
 function updateNavForLogin() {
@@ -59,9 +63,11 @@ function displayContactList(contacts) {
       <h3>${contact.firstname}  ${contact.lastname}</h3>
       <p>Phone: ${contact.phoneNumber}</p>
       <p>Email: ${contact.email}</p>
-      <button class="delete-btn" id="delete-btn" data-id="${contact.id}">Delete</button>
+      <button class="delete-btn"  data-id="${contact.id}" >Delete</button>
       <span style="display: inline-block; width: 10px;"></span>
-      <button class="edit-btn" id="edit-btn" data-id="${contact.id}">Edit</button>
+      <button class="edit-btn"  data-id='${JSON.stringify(
+        contact
+      )}'>Edit</button>
     `;
     contactList.appendChild(contactItem);
   });
@@ -80,9 +86,12 @@ function dashboardButton() {
       resetNavToDefault();
       logout();
       localStorage.clear();
-    } else if (event.target.id == "delete-btn") {
+    } else if (event.target.classList.contains("delete-btn")) {
+      const contactId = event.target.getAttribute("data-id");
       showSection("confirmDeletePage");
-    } else if (event.target.id == "edit-btn") {
+      confirmDeletePage(contactId);
+    } else if (event.target.classList.contains("edit-btn")) {
+      const updateId = event.target.getAttribute("data-id");
       showSection("updateContactPage");
     }
   });
@@ -144,6 +153,65 @@ function addContact() {
     },
     { once: true }
   );
+}
+
+function confirmDeletePage(contactId) {
+  const confirmDeleteButton = document.getElementById("confirmDelete");
+  const cancelButton = document.getElementById("cancel");
+
+  if (confirmDeleteButton) {
+    confirmDeleteButton.addEventListener(
+      "click",
+      function (event) {
+        deleteContact(contactId);
+      },
+      { once: true }
+    );
+  }
+  if (cancelButton) {
+    cancelButton.addEventListener(
+      "click",
+      function (event) {
+        showSection("dashboard");
+      },
+      { once: true }
+    );
+  }
+}
+
+function deleteContact(contactId) {
+  fetch("http://localhost:8080/api/BodeNetwork-contact/delete", {
+    method: "Delete",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ contactId }),
+  })
+    .then(async (response) => {
+      const data = await response.json();
+      console.log(data);
+      const messageDiv = document.getElementById("deleteContactMessage");
+      if (response.ok) {
+        messageDiv.textContent = "Registration successful!";
+        messageDiv.style.color = "green";
+        const storedContacts = JSON.parse(localStorage.getItem("userContacts"));
+        const updatedContacts = storedContacts.filter(
+          (contact) => contact.id !== contactId
+        );
+        localStorage.setItem("userContacts", JSON.stringify(updatedContacts));
+        displayContactList(updatedContacts);
+        showSection("dashboard");
+      } else {
+        messageDiv.textContent = data.data || "Registration failed.";
+        messageDiv.style.color = "red";
+      }
+    })
+    .catch((error) => {
+      console.error("Error:", error);
+      const messageDiv = document.getElementById("regMessage");
+      messageDiv.textContent = "An error occurred during registration.";
+      messageDiv.style.color = "red";
+    });
 }
 
 document

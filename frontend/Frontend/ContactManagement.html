@@ -8,7 +8,7 @@
   </head>
   <body>
     <header>
-      <h1>📱 BodeNetwork</h1>
+      <h1>📱Contact-Management Service</h1>
       <nav>
         <ul>
           <li id="navHome">
@@ -75,7 +75,7 @@
       <!-- Dashboard Section -->
       <section id="dashboard" style="display: none">
         <div class="dashboard-header">
-          <h2>Bode Network</h2>
+          <h2>PhoneBook</h2>
           <button id="addContactBtn">+ Add Contact</button>
         </div>
         <div class="dashboard-search">
@@ -87,7 +87,6 @@
         </div>
         <div id="contactsList" class="contacts-list">
           <!-- Contacts will be inserted here -->
-         
         </div>
       </section>
 
@@ -121,8 +120,11 @@
       <section id="confirmDeletePage" style="display: none">
         <h2>Confirm Delete</h2>
         <p id="confirmDeleteText"></p>
-        <button onclick="confirmDelete()">Yes, Delete</button>
-        <button onclick="cancelDelete()">Cancel</button>
+        <button onclick="confirmDelete()" id="confirmDelete" style="color: red">
+          Yes, Delete
+        </button>
+        <button onclick="cancelDelete()" id="cancel">Cancel</button>
+        <div id="deleteContactMessage" class="message"></div>
       </section>
 
       <!-- Update Contact Section-->
@@ -153,6 +155,7 @@
             Cancel
           </button>
         </form>
+        <div id="updateContactMessage" class="message"></div>
       </section>
     </main>
 
