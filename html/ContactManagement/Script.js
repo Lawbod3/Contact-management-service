@@ -6,6 +6,22 @@ function showSection(sectionId) {
     document.getElementById(id).style.display =
       id === sectionId ? "block" : "none";
   });
+  if (sectionId !== "login") {
+    const loginForm = document.getElementById("loginForm");
+    if (loginForm) loginForm.reset();
+    const loginMessage = document.getElementById("loginMessage");
+    if (loginMessage) loginMessage.textContent = "";
+  }
+  if (sectionId !== "addContactPage") {
+    const addContactMessage = document.getElementById("addContactMessage");
+    if (addContactMessage) addContactMessage.textContent = "";
+  }
+  if (sectionId !== "register") {
+    const registerForm = document.getElementById("registerForm");
+     if(registerForm)registerForm.reset();
+    const registerMessage = document.getElementById("regMessage");
+    if (registerMessage) registerMessage.textContent = "";
+  }
 }
 
 function updateNavForLogin() {
@@ -52,16 +68,23 @@ function dashboardButton() {
       addContact();
     } else if (event.target.id === "logoutBtn") {
       resetNavToDefault();
-      showSection("home");
+      logout();
       localStorage.clear();
     }
   });
 }
 
+function logout() {
+  localStorage.removeItem("userId");
+  showSection("login");
+  const loginForm = document.getElementById("loginForm");
+  if (loginForm) loginForm.reset();
+}
+
 function addContact() {
-  document
-    .getElementById("addContactForm")
-    .addEventListener("submit", function (event) {
+  document.getElementById("addContactForm").addEventListener(
+    "submit",
+    function (event) {
       event.preventDefault();
       const firstname = document.getElementById("contactFirstname").value;
       const lastname = document.getElementById("contactLastname").value;
@@ -89,6 +112,7 @@ function addContact() {
           if (response.ok) {
             messageDiv.textContent = "Contact added successfully!";
             messageDiv.style.color = "green";
+            document.getElementById("addContactForm").reset();
             displayContactList(data.data.contacts);
             showSection("dashboard");
           } else {
@@ -103,7 +127,9 @@ function addContact() {
             "An error occurred while adding the contact.";
           messageDiv.style.color = "red";
         });
-    });
+    },
+    { once: true }
+  );
 }
 
 document
