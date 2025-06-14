@@ -85,9 +85,7 @@
             placeholder="Search contacts..."
           />
         </div>
-        <div id="contactsList" class="contacts-list">
-          <!-- Contacts will be inserted here -->
-        </div>
+        <div id="contactsList" class="contacts-list"></div>
       </section>
 
       <!-- Add Contact Section -->
@@ -135,13 +133,13 @@
             type="text"
             id="updateFirstname"
             placeholder="First Name"
-            required
+            optional
           />
           <input
             type="text"
             id="updateLastname"
             placeholder="Last Name"
-            required
+            optional
           />
           <input
             type="text"
@@ -149,8 +147,8 @@
             placeholder="Phone Number"
             required
           />
-          <input type="email" id="updateEmail" placeholder="Email" />
-          <button type="submit">Save Changes</button>
+          <input type="email" id="updateEmail" placeholder="Email" optional />
+          <button type="submit" id="saveChanges">Save Changes</button>
           <button type="button" onclick="showSection('dashboard')">
             Cancel
           </button>

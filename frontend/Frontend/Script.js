@@ -31,8 +31,16 @@ function showSection(sectionId) {
     if (registerMessage) registerMessage.textContent = "";
   }
   if (sectionId !== "confirmDeletePage") {
-    const registerMessage = document.getElementById("regMessage");
+    const deleteContactMessage = document.getElementById(
+      "deleteContactMessage"
+    );
     if (deleteContactMessage) deleteContactMessage.textContent = "";
+  }
+  if (sectionId !== "updateContactPage") {
+    const updateContactMessage = document.getElementById(
+      "updateContactMessage"
+    );
+    if (updateContactMessage) updateContactMessage.textContent = "";
   }
 }
 
@@ -81,7 +89,6 @@ function dashboardButton() {
       localStorage.clear();
     } else if (event.target.id === "addContactBtn") {
       showSection("addContactPage");
-      addContact();
     } else if (event.target.id === "logoutBtn") {
       resetNavToDefault();
       logout();
@@ -91,8 +98,9 @@ function dashboardButton() {
       showSection("confirmDeletePage");
       confirmDeletePage(contactId);
     } else if (event.target.classList.contains("edit-btn")) {
-      const updateId = event.target.getAttribute("data-id");
+      const contact = JSON.parse(event.target.getAttribute("data-id"));
       showSection("updateContactPage");
+      updateContactPage(contact);
     }
   });
 }
@@ -102,57 +110,6 @@ function logout() {
   showSection("login");
   const loginForm = document.getElementById("loginForm");
   if (loginForm) loginForm.reset();
-}
-
-function addContact() {
-  document.getElementById("addContactForm").addEventListener(
-    "submit",
-    function (event) {
-      event.preventDefault();
-      const firstname = document.getElementById("contactFirstname").value;
-      const lastname = document.getElementById("contactLastname").value;
-      const phoneNumber = document.getElementById("contactPhonenumber").value;
-      const email = document.getElementById("contactEmail").value;
-      const userId = localStorage.getItem("userId");
-      console.log(userId);
-      fetch("http://localhost:8080/api/BodeNetwork-contact/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstname,
-          lastname,
-          email,
-          phoneNumber,
-          userId,
-        }),
-      })
-        .then(async (response) => {
-          const data = await response.json();
-          console.log(data);
-          const messageDiv = document.getElementById("addContactMessage");
-          if (response.ok) {
-            messageDiv.textContent = "Contact added successfully!";
-            messageDiv.style.color = "green";
-            document.getElementById("addContactForm").reset();
-            displayContactList(data.data.contacts);
-            showSection("dashboard");
-          } else {
-            messageDiv.textContent = data.data || "Failed to add contact.";
-            messageDiv.style.color = "red";
-          }
-        })
-        .catch((error) => {
-          console.error("Error:", error);
-          const messageDiv = document.getElementById("addContactMessage");
-          messageDiv.textContent =
-            "An error occurred while adding the contact.";
-          messageDiv.style.color = "red";
-        });
-    },
-    { once: true }
-  );
 }
 
 function confirmDeletePage(contactId) {
@@ -177,6 +134,74 @@ function confirmDeletePage(contactId) {
       { once: true }
     );
   }
+}
+
+let saveChangesHandler;
+function updateContactPage(contact) {
+  document.getElementById("updateFirstname").value = contact.firstname;
+  document.getElementById("updateLastname").value = contact.lastname;
+  document.getElementById("updatePhoneNumber").value = contact.phoneNumber;
+  document.getElementById("updateEmail").value = contact.email;
+  const contactId = contact.id;
+  const saveChangesButton = document.getElementById("saveChanges");
+  if (saveChangesHandler) {
+    saveChangesButton.removeEventListener("click", saveChangesHandler);
+  }
+
+  saveChangesHandler = function (event) {
+    event.preventDefault();
+    const firstname = document.getElementById("updateFirstname").value;
+    const lastname = document.getElementById("updateLastname").value;
+    const phoneNumber = document.getElementById("updatePhoneNumber").value;
+    const email = document.getElementById("updateEmail").value;
+    fetch("http://localhost:8080/api/BodeNetwork-contact/update", {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstname,
+        lastname,
+        phoneNumber,
+        email,
+        contactId: contact.id,
+      }),
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        console.log(data);
+        const messageDiv = document.getElementById("updateContactMessage");
+        if (response.ok) {
+          messageDiv.textContent = "Contact updated succesful!";
+          messageDiv.style.color = "green";
+          const updatedContact = {
+            id: contactId,
+            firstname: data.data.firstname,
+            lastname: data.data.lastname,
+            phoneNumber: data.data.phoneNumber,
+            email: data.data.email,
+          };
+          let contacts = JSON.parse(localStorage.getItem("userContacts")) || [];
+          const updatedContacts = contacts.map((eachContact) =>
+            eachContact.id === contactId ? updatedContact : eachContact
+          );
+          localStorage.setItem("userContacts", JSON.stringify(contacts));
+          displayContactList(updatedContacts);
+          showSection("dashboard");
+        } else {
+          messageDiv.textContent = data.data || "Registration failed.";
+          messageDiv.style.color = "red";
+          showSection("dashboard");
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        const messageDiv = document.getElementById("regMessage");
+        messageDiv.textContent = "An error occurred during registration.";
+        messageDiv.style.color = "red";
+      });
+  };
+  saveChangesButton.addEventListener("click", saveChangesHandler);
 }
 
 function deleteContact(contactId) {
@@ -296,3 +321,54 @@ document
         messageDiv.style.color = "red";
       });
   });
+
+document
+  .getElementById("addContactForm")
+  .addEventListener("submit", function (event) {
+    event.preventDefault();
+    const firstname = document.getElementById("contactFirstname").value;
+    const lastname = document.getElementById("contactLastname").value;
+    const phoneNumber = document.getElementById("contactPhonenumber").value;
+    const email = document.getElementById("contactEmail").value;
+    const userId = localStorage.getItem("userId");
+
+    fetch("http://localhost:8080/api/BodeNetwork-contact/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        firstname,
+        lastname,
+        email,
+        phoneNumber,
+        userId,
+      }),
+    })
+      .then(async (response) => {
+        const data = await response.json();
+        const messageDiv = document.getElementById("addContactMessage");
+        if (response.ok) {
+          messageDiv.textContent = "Contact added successfully!";
+          messageDiv.style.color = "green";
+          document.getElementById("addContactForm").reset();
+          localStorage.setItem(
+            "userContacts",
+            JSON.stringify(data.data.contacts)
+          );
+          displayContactList(data.data.contacts);
+          showSection("dashboard");
+        } else {
+          messageDiv.textContent = data.data || "Failed to add contact.";
+          messageDiv.style.color = "red";
+        }
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+        const messageDiv = document.getElementById("addContactMessage");
+        messageDiv.textContent = "An error occurred while adding the contact.";
+        messageDiv.style.color = "red";
+      });
+  });
+
+dashboardButton();
