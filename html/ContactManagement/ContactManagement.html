@@ -11,9 +11,18 @@
       <h1>📱 BodeNetwork</h1>
       <nav>
         <ul>
-          <li><a href="#" onclick="showSection('home')">Home</a></li>
-          <li><a href="#" onclick="showSection('register')">Register</a></li>
-          <li><a href="#" onclick="showSection('login')">Login</a></li>
+          <li id="navHome">
+            <a href="#" onclick="showSection('home')">Home</a>
+          </li>
+          <li id="navRegister">
+            <a href="#" onclick="showSection('register')">Register</a>
+          </li>
+          <li id="navLogin">
+            <a href="#" onclick="showSection('login')">Login</a>
+          </li>
+          <li id="navLogout" style="display: none">
+            <a href="#" id="logoutBtn">Logout</a>
+          </li>
         </ul>
       </nav>
     </header>
@@ -61,6 +70,50 @@
           <button type="submit">Login</button>
         </form>
         <div id="loginMessage" class="message"></div>
+      </section>
+
+      <!-- Dashboard Section -->
+      <section id="dashboard" style="display: none">
+        <div class="dashboard-header">
+          <h2>Bode Network</h2>
+          <button id="addContactBtn">+ Add Contact</button>
+        </div>
+        <div class="dashboard-search">
+          <input
+            type="text"
+            id="searchInput"
+            placeholder="Search contacts..."
+          />
+        </div>
+        <div id="contactsList" class="contacts-list">
+          <!-- Contacts will be inserted here -->
+        </div>
+      </section>
+
+      <!-- Add Contact Section -->
+      <section id="addContactPage" style="display: none">
+        <h2>Add New Contact</h2>
+        <form id="addContactForm">
+          <label for="contactFirstname">Firstname:</label>
+          <input type="text" id="contactFirstname" name="firstname" required />
+
+          <label for="contactLastname">LastName:</label>
+          <input type="text" id="contactLastname" name="lastname" required />
+
+          <label for="contactPhonenumber">Phonenumber:</label>
+          <input
+            type="text"
+            id="contactPhonenumber"
+            name="Phonenumber"
+            required
+          />
+
+          <label for="contactEmail">Email:</label>
+          <input type="email" id="contactEmail" name="email" required />
+
+          <button type="submit">Add Contact</button>
+        </form>
+        <div id="addContactMessage" class="message"></div>
       </section>
     </main>
 
