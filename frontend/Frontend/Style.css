@@ -244,3 +244,13 @@ footer {
   margin-top: 10px;
   font-weight: bold;
 }
+
+.contact-item button {
+  padding: 8px 14px;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Delete and Update Styling */

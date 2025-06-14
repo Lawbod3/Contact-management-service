@@ -1,7 +1,15 @@
 console.log("Script loaded");
 
 function showSection(sectionId) {
-  const sections = ["home", "register", "login", "dashboard", "addContactPage"];
+  const sections = [
+    "home",
+    "register",
+    "login",
+    "dashboard",
+    "addContactPage",
+    "confirmDeletePage",
+    "updateContactPage",
+  ];
   sections.forEach((id) => {
     document.getElementById(id).style.display =
       id === sectionId ? "block" : "none";
@@ -18,7 +26,7 @@ function showSection(sectionId) {
   }
   if (sectionId !== "register") {
     const registerForm = document.getElementById("registerForm");
-     if(registerForm)registerForm.reset();
+    if (registerForm) registerForm.reset();
     const registerMessage = document.getElementById("regMessage");
     if (registerMessage) registerMessage.textContent = "";
   }
@@ -51,7 +59,9 @@ function displayContactList(contacts) {
       <h3>${contact.firstname}  ${contact.lastname}</h3>
       <p>Phone: ${contact.phoneNumber}</p>
       <p>Email: ${contact.email}</p>
-      <button onclick="deleteContact('${contact.id}')">Delete</button>
+      <button class="delete-btn" id="delete-btn" data-id="${contact.id}">Delete</button>
+      <span style="display: inline-block; width: 10px;"></span>
+      <button class="edit-btn" id="edit-btn" data-id="${contact.id}">Edit</button>
     `;
     contactList.appendChild(contactItem);
   });
@@ -70,6 +80,10 @@ function dashboardButton() {
       resetNavToDefault();
       logout();
       localStorage.clear();
+    } else if (event.target.id == "delete-btn") {
+      showSection("confirmDeletePage");
+    } else if (event.target.id == "edit-btn") {
+      showSection("updateContactPage");
     }
   });
 }

@@ -87,6 +87,7 @@
         </div>
         <div id="contactsList" class="contacts-list">
           <!-- Contacts will be inserted here -->
+         
         </div>
       </section>
 
@@ -114,6 +115,44 @@
           <button type="submit">Add Contact</button>
         </form>
         <div id="addContactMessage" class="message"></div>
+      </section>
+
+      <!-- Delete Contact Section-->
+      <section id="confirmDeletePage" style="display: none">
+        <h2>Confirm Delete</h2>
+        <p id="confirmDeleteText"></p>
+        <button onclick="confirmDelete()">Yes, Delete</button>
+        <button onclick="cancelDelete()">Cancel</button>
+      </section>
+
+      <!-- Update Contact Section-->
+      <section id="updateContactPage" style="display: none">
+        <h2>Update Contact</h2>
+        <form id="updateContactForm">
+          <input
+            type="text"
+            id="updateFirstname"
+            placeholder="First Name"
+            required
+          />
+          <input
+            type="text"
+            id="updateLastname"
+            placeholder="Last Name"
+            required
+          />
+          <input
+            type="text"
+            id="updatePhoneNumber"
+            placeholder="Phone Number"
+            required
+          />
+          <input type="email" id="updateEmail" placeholder="Email" />
+          <button type="submit">Save Changes</button>
+          <button type="button" onclick="showSection('dashboard')">
+            Cancel
+          </button>
+        </form>
       </section>
     </main>
 
