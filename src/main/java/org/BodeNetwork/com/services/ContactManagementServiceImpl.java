@@ -63,7 +63,9 @@ public class ContactManagementServiceImpl implements ContactManagementService {
         contact.setFirstname(addContactRequest.getFirstname());
         contact.setLastname(addContactRequest.getLastname());
         contactRepository.save(contact);
-        return Mapper.mapToAddContactResponse(contact);
+        AddContactResponse response = Mapper.mapToAddContactResponse(contact);
+        response.setContacts(contactRepository.findByUserId(user.getId()));
+        return response;
     }
 
     @Override
