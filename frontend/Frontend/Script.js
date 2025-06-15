@@ -371,4 +371,21 @@ document
       });
   });
 
+const searchInput = document.getElementById("searchInput");
+searchInput.addEventListener("input", function (event) {
+  const allContacts = JSON.parse(localStorage.getItem("userContacts"));
+  const searchDetails = searchInput.value.toLowerCase();
+  const filteredContacts = allContacts.filter((contact) => {
+    const fullName = `${contact.firstname} ${contact.lastname}`.toLowerCase();
+    const phoneNumber = String(contact.phoneNumber).toLowerCase();
+    const email = contact.email.toLowerCase();
+    return (
+      fullName.includes(searchDetails) ||
+      phoneNumber.includes(searchDetails) ||
+      email.includes(searchDetails)
+    );
+  });
+  displayContactList(filteredContacts);
+});
+
 dashboardButton();
