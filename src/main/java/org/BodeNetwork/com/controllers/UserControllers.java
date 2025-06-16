@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 public class UserControllers {
     @Autowired
     ContactManagementService contactManagementService;
+
     @GetMapping("/test")
     public String test() {
         return "Api is working";
