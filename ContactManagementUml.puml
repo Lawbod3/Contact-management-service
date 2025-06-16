@@ -1,0 +1,289 @@
+@startuml
+
+
+top to bottom direction
+skinparam linetype ortho
+
+class AddContactRequest {
+  - firstname: String
+  - userId: String
+  - lastname: String
+  - email: String
+  - phoneNumber: String
+  # canEqual(Object): boolean
+  + hashCode(): int
+  + equals(Object): boolean
+  + toString(): String
+   firstname: String
+   email: String
+   lastname: String
+   phoneNumber: String
+   userId: String
+}
+class AddContactResponse {
+  - firstname: String
+  - id: String
+  - lastname: String
+  - userId: String
+  - email: String
+  - phoneNumber: String
+  - contacts: List<Contact>
+  # canEqual(Object): boolean
+  + equals(Object): boolean
+  + toString(): String
+  + hashCode(): int
+   email: String
+   lastname: String
+   phoneNumber: String
+   firstname: String
+   contacts: List<Contact>
+   id: String
+   userId: String
+}
+class ApiResponse {
+  - success: boolean
+  - data: Object
+  + equals(Object): boolean
+  # canEqual(Object): boolean
+  + hashCode(): int
+  + toString(): String
+   success: boolean
+   data: Object
+}
+class Contact {
+  - id: String
+  - phoneNumber: String
+  - email: String
+  - userId: String
+  - lastname: String
+  - firstname: String
+  + toString(): String
+  + equals(Object): boolean
+  # canEqual(Object): boolean
+  + hashCode(): int
+   firstname: String
+   email: String
+   id: String
+   lastname: String
+   phoneNumber: String
+   userId: String
+}
+class ContactControllers {
+  + test(): String
+  - createErrorResponse(Exception, HttpStatus): ResponseEntity<?>
+  + addContact(AddContactRequest): ResponseEntity<?>
+  + handleMethodNotSupported(HttpRequestMethodNotSupportedException): ResponseEntity<?>
+  + deleteContact(DeleteContactRequest): ResponseEntity<?>
+  + updateContact(UpdateContactRequest): ResponseEntity<?>
+  + handleValidationExceptions(MethodArgumentNotValidException): ResponseEntity<?>
+}
+class ContactDoesNotExistException
+interface ContactManagementService << interface >> {
+  + deleteContact(DeleteContactRequest): DeleteContactResponse
+  + updateContact(UpdateContactRequest): UpdateContactResponse
+  + loginUser(UserLoginRequest): UserLoginResponse
+  + addContact(AddContactRequest): AddContactResponse
+  + registerUser(UserRegistrationRequest): UserRegistrationResponse
+}
+class ContactManagementServiceImpl {
+  + updateContact(UpdateContactRequest): UpdateContactResponse
+  + deleteContact(DeleteContactRequest): DeleteContactResponse
+  + registerUser(UserRegistrationRequest): UserRegistrationResponse
+  + loginUser(UserLoginRequest): UserLoginResponse
+  + addContact(AddContactRequest): AddContactResponse
+}
+class ContactManagementServiceTest {
+  + testThatContactServiceManagementCanAddContactToUserContactList(): void
+  + testThatContactServiceManagementCanThrowExceptionForExistingUser(): void
+  + testThatContactServiceManagementCanThrowExzceptionForDeleteExistingContact(): void
+  + testThatContactServiceManagementCanDeleteExistingContact(): void
+  + testThatContactServiceCanUpdateContact(): void
+  ~ setUp(): void
+  + testThatContactServiceManagementCanGetUserWhenLoggedIn(): void
+  + testThatContactServiceManagementCanThrowExceptionForWrongPassword(): void
+  + testThatContactServiceManagementCanThrowExceptionForUserNotFound(): void
+  + testThatContactServiceManagementCanRegisterUser(): void
+  + testThatContactServiceCanThrowExceptionForUpdateContact(): void
+}
+interface ContactRepository << interface >> {
+  + findByUserId(String): List<Contact>
+}
+class ContactRepositoryTest {
+  + testContactRepositoryIsNotEmpty(): void
+  + testContactRepositoryContainsContact(): void
+  + setUp(): void
+  + testContactRepositoryIsEmpty(): void
+}
+class ContactValidationException
+class DeleteContactRequest {
+  - contactId: String
+  + toString(): String
+  + hashCode(): int
+  # canEqual(Object): boolean
+  + equals(Object): boolean
+   contactId: String
+}
+class DeleteContactResponse {
+  - lastname: String
+  - email: String
+  - phoneNumber: String
+  - id: String
+  - firstname: String
+  - userId: String
+  + equals(Object): boolean
+  + toString(): String
+  # canEqual(Object): boolean
+  + hashCode(): int
+   firstname: String
+   email: String
+   id: String
+   lastname: String
+   phoneNumber: String
+   userId: String
+}
+class Main {
+  + main(String[]): void
+}
+class Mapper {
+  + mapToRegistrationResponse(User): UserRegistrationResponse
+  + mapToAddContactResponse(Contact): AddContactResponse
+  + mapToLoginResponse(User): UserLoginResponse
+  + mapToDeleteContactResponse(Contact): DeleteContactResponse
+  + mapValidationToUpdateContactRequest(UpdateContactRequest): void
+  + mapToUpdateContactResponse(Contact): UpdateContactResponse
+}
+class PasswordException
+class UpdateContactRequest {
+  - lastname: String
+  - firstname: String
+  - contactId: String
+  - phoneNumber: String
+  - email: String
+  + toString(): String
+  + hashCode(): int
+  # canEqual(Object): boolean
+  + equals(Object): boolean
+   firstname: String
+   email: String
+   lastname: String
+   phoneNumber: String
+   contactId: String
+}
+class UpdateContactResponse {
+  - phoneNumber: String
+  - lastname: String
+  - email: String
+  - firstname: String
+  # canEqual(Object): boolean
+  + toString(): String
+  + hashCode(): int
+  + equals(Object): boolean
+   firstname: String
+   email: String
+   lastname: String
+   phoneNumber: String
+}
+class User {
+  - id: String
+  - phoneNumber: String
+  - email: String
+  - password: String
+  # canEqual(Object): boolean
+  + isValidPassword(String): boolean
+  + equals(Object): boolean
+  + hashCode(): int
+  + toString(): String
+   password: String
+   email: String
+   id: String
+   phoneNumber: String
+}
+class UserControllers {
+  + test(): String
+  + handleValidationExceptions(MethodArgumentNotValidException): ResponseEntity<?>
+  - createErrorResponse(Exception, HttpStatus): ResponseEntity<?>
+  + login(UserLoginRequest): ResponseEntity<?>
+  + register(UserRegistrationRequest): ResponseEntity<?>
+}
+class UserDoesNotExistException
+class UserExistException
+class UserLoginRequest {
+  - phoneNumber: String
+  - password: String
+  + toString(): String
+  + equals(Object): boolean
+  + hashCode(): int
+  # canEqual(Object): boolean
+   password: String
+   phoneNumber: String
+}
+class UserLoginResponse {
+  - phoneNumber: String
+  - contacts: List<Contact>
+  - id: String
+  + equals(Object): boolean
+  # canEqual(Object): boolean
+  + toString(): String
+  + hashCode(): int
+   id: String
+   contacts: List<Contact>
+   phoneNumber: String
+}
+class UserRegistrationRequest {
+  - password: String
+  - phoneNumber: String
+  - email: String
+  # canEqual(Object): boolean
+  + toString(): String
+  + equals(Object): boolean
+  + hashCode(): int
+   email: String
+   password: String
+   phoneNumber: String
+}
+class UserRegistrationResponse {
+  - id: String
+  - phoneNumber: String
+  - email: String
+  + hashCode(): int
+  + toString(): String
+  + equals(Object): boolean
+  # canEqual(Object): boolean
+   email: String
+   id: String
+   phoneNumber: String
+}
+interface UserRepository << interface >> {
+  + existsByPhoneNumber(String): boolean
+  + findByPhoneNumber(String): Optional<User>
+}
+class UserRepositoryTest {
+  + testThatUserRepositoryIsEmpty(): void
+  + testThatUserRepositoryIsNotEmpty(): void
+  ~ setUp(): void
+  + testThatUserRepositoryContainsUser(): void
+}
+
+AddContactResponse           "1" *-[#595959,plain]-> "contacts\n*" Contact
+ContactControllers           "1" *-[#595959,plain]-> "contactManagementService\n1" ContactManagementService
+ContactManagementServiceImpl  -[#008200,dashed]-^  ContactManagementService
+ContactManagementServiceImpl "1" *-[#595959,plain]-> "contactRepository\n1" ContactRepository
+ContactManagementServiceImpl "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
+ContactManagementServiceTest "1" *-[#595959,plain]-> "addContactRequest\n1" AddContactRequest
+ContactManagementServiceTest "1" *-[#595959,plain]-> "addContactResponse\n1" AddContactResponse
+ContactManagementServiceTest "1" *-[#595959,plain]-> "contactManagementService\n1" ContactManagementService
+ContactManagementServiceTest "1" *-[#595959,plain]-> "contactRepository\n1" ContactRepository
+ContactManagementServiceTest "1" *-[#595959,plain]-> "deleteContactRequest\n1" DeleteContactRequest
+ContactManagementServiceTest "1" *-[#595959,plain]-> "deleteContactResponse\n1" DeleteContactResponse
+ContactManagementServiceTest "1" *-[#595959,plain]-> "updateContactRequest\n1" UpdateContactRequest
+ContactManagementServiceTest "1" *-[#595959,plain]-> "updateContactResponse\n1" UpdateContactResponse
+ContactManagementServiceTest "1" *-[#595959,plain]-> "userLoginRequest\n1" UserLoginRequest
+ContactManagementServiceTest "1" *-[#595959,plain]-> "userLoginResponse\n1" UserLoginResponse
+ContactManagementServiceTest "1" *-[#595959,plain]-> "userRegistrationRequest\n1" UserRegistrationRequest
+ContactManagementServiceTest "1" *-[#595959,plain]-> "userRegistrationResponse\n1" UserRegistrationResponse
+ContactManagementServiceTest "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
+ContactRepositoryTest        "1" *-[#595959,plain]-> "contactRepository\n1" ContactRepository
+UserControllers              "1" *-[#595959,plain]-> "contactManagementService\n1" ContactManagementService
+UserLoginResponse            "1" *-[#595959,plain]-> "contacts\n*" Contact
+UserRepositoryTest           "1" *-[#595959,plain]-> "userRepository\n1" UserRepository
+@enduml

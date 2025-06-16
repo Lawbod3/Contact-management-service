@@ -19,7 +19,7 @@ public class Mapper {
         UserLoginResponse response = new UserLoginResponse();
         response.setPhoneNumber(user.getPhoneNumber());
         response.setId(user.getId());
-       return response;
+        return response;
     }
 
     public static AddContactResponse mapToAddContactResponse(Contact contact) {
